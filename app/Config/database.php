@@ -83,9 +83,9 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'aigel_remoto',
-		'password' => '41g3lBS.85',
-		'database' => 'miboo',
+		'login' => 'admin_miboo',
+		'password' => '!M1bo0.2025#Htyf567KJH',
+		'database' => 'miboodb',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
