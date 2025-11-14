@@ -46,7 +46,12 @@
 							<tbody>
 								<?php
 									$i=0;
+									$agencia = '';
 									foreach ($jugadores as $jugador):
+										if ($agencia != $jugador['Comisionista']['usuario']):
+											echo "<tr><td colspan='9' style='background-color: black; color:white; text-align: center'>".$jugador['Comisionista']['usuario']."</td></tr>";
+											$agencia = $jugador['Comisionista']['usuario'];
+										endif;
 								?>
 									<tr>
 										<td><?= $jugador['Comisionista']['usuario']?>(<?= $jugador['Jugador']['comision_comisionista']?>%)</td>

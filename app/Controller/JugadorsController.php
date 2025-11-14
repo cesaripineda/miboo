@@ -13,7 +13,11 @@ class JugadorsController extends AppController {
 		}else{
 			$jugadores = $this->Jugador->find('all',array('conditions'=>array('Jugador.estatus'=>1)));
 		}
-		$jugadores_list = $this->Jugador->find('list',array('conditions'=>array('Jugador.estatus')));
+		$jugadores_raw = $this->Jugador->find('all',array('conditions'=>array('Jugador.estatus'),'fields'=>array('id','nombre','usuario')));
+		$jugadores_list = array();
+		foreach ($jugadores_raw as $jugador){
+			$jugadores_list[$jugador['Jugador']['id']] = $jugador['Jugador']['usuario']."-".$jugador['Jugador']['nombre'];
+		}
 		$i=0;
 		foreach ($jugadores as $jugador) {
 			$saldo = $jugador['Jugador']['saldo_inicial'];
@@ -57,7 +61,15 @@ class JugadorsController extends AppController {
 	function ganancias_semanales(){
 		$this->set('titulo_seccion','Lista de Jugadores');
 		$this->Jugador->Behaviors->load('Containable');
-		$jugadores = $this->Jugador->find('all',array('conditions'=>array('Jugador.estatus'=>1)));
+		$jugadores = $this->Jugador->find(
+			'all',
+			array(
+				'conditions'=>array(
+					'Jugador.estatus'=>1
+				),
+				'order'=> array('Comisionista.usuario'=>'ASC','Jugador.usuario'=>'ASC')
+			)
+		);
 		$i=0;
 		foreach ($jugadores as $jugador) {
 			$saldo = $jugador['Jugador']['saldo_inicial'];

@@ -121,8 +121,8 @@
 					<?= $this->Form->input('jugador_id',array('value'=>$jugador['Jugador']['id'],'type'=>'hidden'))?>
 					<?= $this->Form->input('banco',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Banco',));?>
 					<?= $this->Form->input('beneficiario',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Beneficiario',));?>
-					<?= $this->Form->input('cuenta_bancaria',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Cuenta Bancaria',));?>
-					<?= $this->Form->input('spei',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'SPEI',));?>
+					<?= $this->Form->input('cuenta_bancaria',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Cuenta',));?>
+					<?= $this->Form->input('spei',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'CLABE',));?>
 					<?= $this->Form->input('debito',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Tarjeta de Débito',));?>
 					<?= $this->Form->input('credito',array('type'=>'text','class'=>'form-control','div'=>'col-md-6','label'=>'Tarjeta de Crédito',));?>
 				</div>
@@ -246,6 +246,8 @@
 								<th>Banco</th>
 								<th>Cuenta Bancaria</th>
 								<th>CLABE</th>
+								<th>Débito</th>
+								<th>Crédito</th>
 								<th>Beneficiario</th>
 								<th>Status</th>
 								<th>Editar</th>
@@ -269,6 +271,8 @@
 									<td><?= $cuenta['banco']?></td>
 									<td><?= $cuenta['cuenta_bancaria']?></td>
 									<td><?= $cuenta['spei']?></td>
+									<td><?= $cuenta['debito']?></td>
+									<td><?= $cuenta['credito']?></td>
 									<td><?= $cuenta['beneficiario']?></td>
 									<td>
 										<div class="form-group radio_basic_swithes_padbott">

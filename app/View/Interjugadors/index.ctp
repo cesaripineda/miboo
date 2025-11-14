@@ -49,8 +49,8 @@
 								?>
 									<tr>
 										<td><?= date("d/M/Y H:i:s",strtotime($solicitud['Interjugador']['solicitado']))?></td>
-										<td><?= $solicitud['Remitente']['usuario']?></td>
-										<td><?= $solicitud['Receptor']['usuario']?></td>
+										<td><?= $solicitud['Remitente']['usuario']." - ".$solicitud['Remitente']['nombre']?></td>
+										<td><?= $solicitud['Receptor']['usuario']." - ".$solicitud['Receptor']['nombre']?></td>
 										<td><?= "$".number_format($solicitud['Interjugador']['cantidad'])?></td>
 										<td><?= date("d/M/Y",strtotime($solicitud['Interjugador']['fecha_limite']))?></td>
 										<td><?= $solicitud['Interjugador']['realizado'] ? "Realizado" : "Pendiente"?></td>
