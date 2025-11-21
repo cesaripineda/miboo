@@ -49,7 +49,17 @@
 									$agencia = '';
 									foreach ($jugadores as $jugador):
 										if ($agencia != $jugador['Comisionista']['usuario']):
-											echo "<tr><td colspan='9' style='background-color: black; color:white; text-align: center'>".$jugador['Comisionista']['usuario']."</td></tr>";
+											// Generamos un ID único para el total del comisionista
+											$comisionista_id = $jugador['Comisionista']['id'];
+											$display_name = $jugador['Comisionista']['usuario'];
+
+											echo "<tr class='comisionista-row' id='comisionista_row_{$comisionista_id}'>";
+											// La sumatoria se mostrará en este <td>
+											echo "<td colspan='4' style='background-color: black; color:white; text-align: left; font-weight: bold;'>Comisionista: {$display_name}</td>";
+											// ID donde aparecerá el monto total del comisionista
+											echo "<td colspan='5' style='background-color: black; color:white; text-align: right; font-weight: bold;'>Total Monto: <span id='total_comisionista_{$comisionista_id}'>$0.00</span></td>";
+											echo "</tr>";
+
 											$agencia = $jugador['Comisionista']['usuario'];
 										endif;
 								?>
@@ -59,7 +69,12 @@
 										<td><?= $jugador['Jugador']['nombre']?></td>
 										<td data-filter="<?= $jugador['Saldo']>0 ? "Ganador": "Deudor"?>" style="<?=  $jugador['Saldo']>0 ? "color:red;font-weight:bold;": "color:green;font-weight:bold;"?>">$<?= number_format($jugador['Saldo'],2)?></td>
 										<td>
-											<?= $this->Form->input('monto_'.$i,array('id'=>'monto_'.$i,'type'=>'number','class'=>'form-control','div'=>'col-md-10','placeholder'=>'Ganancia / Pérdida','onchange'=>'javascript:validarTotal('.$i.','.$jugador['Jugador']['descuento_2'].','.$jugador['Saldo'].')','label'=>false))?>
+											<?= $this->Form->input('monto_'.$i,array('id'=>'monto_'.$i,
+												'type'=>'number','class'=>'form-control monto-input', // Añadimos 'monto-input'
+												'div'=>'col-md-10','placeholder'=>'Ganancia / Pérdida',
+												// Pasamos el ID del comisionista a la función JS
+												'onchange'=>'javascript:validarTotal('.$i.','.$jugador['Jugador']['descuento_2'].','.$jugador['Saldo'].','.$jugador['Comisionista']['id'].')',
+												'label'=>false))?>
 											<?= $this->Form->hidden('monto_dd_'.$i,array('id'=>'monto_dd_'.$i))?>
 											<?= $this->Form->hidden('jugador_id_'.$i,array('value'=>$jugador['Jugador']['id']))?>
 										</td>
@@ -101,6 +116,52 @@
 <script>
 	function registrarPago(){
 		$('#addPago').modal('show');
+	}
+
+	function updateComisionistaTotals() {
+		// Objeto para almacenar la suma por comisionista: {1: 1500, 2: -500, ...}
+		var totalesPorComisionista = {};
+
+		// Obtenemos el número total de filas/jugadores
+		var contador = Number(document.getElementById('contador').value);
+
+		for (let i = 0; i < contador; i++) {
+			var montoInput = document.getElementById('monto_' + i);
+			var comisionistaIdInput = document.getElementById('comisionista_id_' + i);
+
+			if (montoInput && comisionistaIdInput) {
+				const monto = Number(montoInput.value) || 0;
+				const comisionistaId = comisionistaIdInput.value;
+
+				// Sumar el monto al total del comisionista
+				if (totalesPorComisionista[comisionistaId]) {
+					totalesPorComisionista[comisionistaId] += monto;
+				} else {
+					totalesPorComisionista[comisionistaId] = monto;
+				}
+			}
+		}
+
+		// Recorrer el objeto y actualizar los elementos HTML
+		for (const id in totalesPorComisionista) {
+			if (totalesPorComisionista.hasOwnProperty(id)) {
+				const total = totalesPorComisionista[id];
+				const elementoTotal = document.getElementById('total_comisionista_' + id);
+
+				if (elementoTotal) {
+					elementoTotal.innerHTML = "$" + total.toFixed(2);
+
+					// Opcional: Aplicar un estilo de color según el saldo
+					if (total < 0) {
+						elementoTotal.style.color = 'white'; // Color para saldos negativos (ganancia para la empresa)
+					} else if (total > 0) {
+						elementoTotal.style.color = 'white'; // Color para saldos positivos (deuda de la empresa)
+					} else {
+						elementoTotal.style.color = 'white';
+					}
+				}
+			}
+		}
 	}
 
 	function redondearDecena(numero) {
@@ -155,38 +216,41 @@
 		document.getElementById('total-total-semana').innerHTML = "$" + totalTotalSemana.toFixed(2);
 	}
 
-	function validarTotal(row,descuento, saldo_anterior){
+	function validarTotal(row,descuento, saldo_anterior, comisionista_id) { // <-- AGREGAMOS comisionista_id
 		// La lógica de cálculo ya existente...
 
-		var total = Number(document.getElementById('monto_'+row).value);
-		var saldo_anterior = Number (saldo_anterior);
+		var total = Number(document.getElementById('monto_' + row).value);
+		var saldo_anterior = Number(saldo_anterior);
 		// ... (toda tu lógica de cálculo de total y redondeo)
 
-		if(Number(document.getElementById('monto_'+row).value) < 0){
-			total_raw = Number(document.getElementById('monto_'+row).value) * ((100-descuento)/100);
+		if (Number(document.getElementById('monto_' + row).value) < 0) {
+			total_raw = Number(document.getElementById('monto_' + row).value) * ((100 - descuento) / 100);
 			total = redondearDecena(total_raw);
-		}else{
-			total = redondearDecena(Number(document.getElementById('monto_'+row).value));
+		} else {
+			total = redondearDecena(Number(document.getElementById('monto_' + row).value));
 			//total = Number(document.getElementById('monto_'+row).value);
 		}
-		var saldo = Number(total+saldo_anterior);
+		var saldo = Number(total + saldo_anterior);
 		var estilo_pagar = "color:red";
 		var estilo_total = "color:darkgreen";
-		if (total < 0){
+		if (total < 0) {
 			estilo_pagar = "color:darkgreen";
-			document.getElementById('comision_'+row).value = Math.floor((total * document.getElementById('comision_value_'+row).value)*-1);
-		}else{
-			document.getElementById('comision_'+row).value = 0;
+			document.getElementById('comision_' + row).value = Math.floor((total * document.getElementById('comision_value_' + row).value) * -1);
+		} else {
+			document.getElementById('comision_' + row).value = 0;
 		}
-		if(saldo > 0){
+		if (saldo > 0) {
 			estilo_total = "color:red";
 		}
-		document.getElementById('total_'+row).innerHTML = "<span style='"+estilo_pagar+"'>"+"$"+total +"</span>";
-		document.getElementById('saldo_'+row).innerHTML = "<span style='"+estilo_total+"'>"+"$"+saldo+"</span>";
-		document.getElementById('monto_dd_'+row).value = total;
+		document.getElementById('total_' + row).innerHTML = "<span style='" + estilo_pagar + "'>" + "$" + total + "</span>";
+		document.getElementById('saldo_' + row).innerHTML = "<span style='" + estilo_total + "'>" + "$" + saldo + "</span>";
+		document.getElementById('monto_dd_' + row).value = total;
 
-		// 🚨 ¡Paso CLAVE! Llama a la nueva función al final del cálculo
+		// Llama a la función global del footer
 		updateFooterTotals();
+
+		// 🚨 ¡Paso CLAVE! Llama a la función de totales por comisionista
+		updateComisionistaTotals();
 	}
 </script>
 
@@ -223,6 +287,7 @@ echo $this->Html->script(
 			orientation:"bottom"
 		});
 		updateFooterTotals();
+		updateComisionistaTotals();
 	}();
 
 </script>

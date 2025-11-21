@@ -24,7 +24,11 @@
 		'Mixto'=>'Mixto',
 	);
 ?>
-
+<style>
+	.hide {
+		display: none;
+	}
+</style>
 <div class="modal fade" id="addJugador" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" style="max-width:900px !important">
 		<div class="modal-content">
@@ -230,6 +234,7 @@
 					<div class="card-header bg-white">
 						Cuentas Bancarias
 						<div style="float: right">
+							<?= $this->Html->link('<i class="fa fa-eye"></i> Ver Todos','javascript:verTodas()',array('class'=>'btn btn-primary','escape'=>false))?>
 							<?= $this->Html->link('<i class="fa fa-plus"></i>','javascript:addCuenta()',array('class'=>'btn btn-success','escape'=>false))?>
 						</div>
 					</div>
@@ -255,9 +260,10 @@
 							</thead>
 							<tbody>
 							<?php
+							$i=0;
 							foreach ($jugador['CuentasBancarias'] as $cuenta):
 								?>
-								<tr>
+								<tr id = 'tr_<?= $i?>' class="<?= !$cuenta['estado'] ? 'hide' : '' ?>">
 									<td
 										data-field="nombre"
 										data-id="<?= $cuenta['id'] ?>"
@@ -283,7 +289,7 @@
 										<?= $this->Html->link('<i class="fa fa-edit fa-lg"></i>',"javascript:editCuenta(".$cuenta['id'].")",array('escape'=>false,'data-toggle'=>'tooltip', 'data-placement'=>'top' ,'title'=>'Editar Cuenta'))?>
 									</td>
 								</tr>
-							<?php endforeach;?>
+							<?php $i++; endforeach;?>
 							</tbody>
 						</table>
 					</div>
@@ -406,6 +412,12 @@
 	</div>
 </div>
 <script>
+
+	function verTodas(){
+		for(i=0;i<=<?= $i?>;i++){
+			document.getElementById('tr_'+i).classList.remove('hide');
+		}
+	}
 
 	function registrarPago(){
 		$('#addPago').modal('show');

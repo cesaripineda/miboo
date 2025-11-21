@@ -178,7 +178,12 @@ echo $this->Html->script(
 				dom: "Bflr<'table-responsive't><'row'<'col-md-5 col-12'i><'col-md-7 col-12'p>>",
 				buttons: [
 					'copy', 'csv', 'print'
-				]
+				],
+				lengthMenu: [
+					[100, 300, 500, -1], // Values for the dropdown: 10, 25, 50, All
+					[100, 300, 500, "Todos"] // Display text for the dropdown
+				],
+				pageLength: 500
 			});
 			var tableWrapper = $('#sample_1_wrapper'); // datatable creates the table wrapper by adding with id {your_table_id}_wrapper
 			tableWrapper.find('.dataTables_length select').select2(); // initialize select2 dropdown
