@@ -2,6 +2,9 @@
 	<div class="menu_scroll">
 		<ul id="menu">
 			<li>
+				<?= $this->Html->link('<i class="fa fa-line-chart"></i><span class="link-title menu_hide"> Dashboard </span>',array('controller'=>'dashboards','action'=>'index'),array('escape'=>false))?>
+			</li>
+			<li>
 				<?= $this->Html->link('<i class="fa fa-users"></i><span class="link-title menu_hide"> Jugadores </span>',array('controller'=>'jugadors','action'=>'index'),array('escape'=>false))?>
 			</li>
 			<li>
