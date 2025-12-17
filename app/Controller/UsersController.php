@@ -128,7 +128,7 @@ class UsersController extends AppController {
 		$this->layout = 'login';
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                    return $this->redirect(array('controller'=>'jugadors','action'=>'index'));
+                    return $this->redirect(array('controller'=>'dashboards','action'=>'index'));
             }else{
                 $this->Session->setFlash(__('Usuario y/o password incorrecto.', true), 'default' ,array('class'=>'mensaje_error'));
             }
