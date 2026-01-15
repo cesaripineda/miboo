@@ -6,7 +6,13 @@
 		'/vendors/datatables/css/dataTables.bootstrap.min',
 		'pages/dataTables.bootstrap',
 		'plugincss/responsive.dataTables.min',
-		'pages/tables'
+		'pages/tables',
+
+		'/vendors/bootstrap-switch/css/bootstrap-switch.min',
+		'/vendors/switchery/css/switchery.min',
+		'/vendors/radio_css/css/radiobox.min',
+		'/vendors/checkbox_css/css/checkbox.min',
+		'pages/radio_checkbox'
 	),
 	array('inline'=>false));
 ?>
@@ -22,6 +28,12 @@
 		$cuentas_list[$cuenta['Cuenta']['id']] = $cuenta['Cuenta']['nombre'];
 	}
 ?>
+
+<style>
+	.hide {
+		display: none;
+	}
+</style>
 
 <div class="modal fade" id="addCuenta" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" style="max-width:900px !important">
@@ -132,6 +144,7 @@
 					<div class="card-header bg-white">
 						Lista de Cuentas
 						<div style="float: right">
+							<?= $this->Html->link('<i class="fa fa-eye"></i> Ver Todos','javascript:verTodas()',array('class'=>'btn btn-primary','escape'=>false))?>
 							<?php echo $this->Html->link('<i class="fa fa-plus" data-pack="default" data-tags=""></i> Agregar Cuenta','javascript:addCuenta()',array('escape'=>false,'class'=>'btn btn-success')); ?>
 							<?php echo $this->Html->link('<i class="fa fa-refresh" data-pack="default" data-tags=""></i> Transferencia Interna','#',array('escape'=>false,'data-target'=>'#addTransferencia','data-toggle'=>'modal','class'=>'btn btn-primary')); ?>
 						</div>
@@ -152,14 +165,16 @@
 									<th>Débito</th>
 									<th>Crédito</th>
 									<th>Balance</th>
+									<th>Status</th>
 									<th style="text-align: center">Acciones</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
+									$i = 0;
 									foreach ($cuentas as $cuenta):
 								?>
-									<tr>
+									<tr id = 'tr_<?= $i?>' class="<?= $cuenta['Cuenta']['estado'] == 0 ? 'hide' : '' ?>">
 										<td><?= $this->Html->link($cuenta['Cuenta']['nombre'],array('action'=>'view','controller'=>'cuentas',$cuenta['Cuenta']['id']))?></td>
 										<td><?= $cuenta['Cuenta']['banco']?></td>
 										<td><?= $cuenta['Cuenta']['cuenta_bancaria']?></td>
@@ -167,12 +182,17 @@
 										<td><?= $cuenta['Cuenta']['debito']?></td>
 										<td><?= $cuenta['Cuenta']['credito']?></td>
 										<td>$<?= number_format($cuenta['saldo'],2)?></td>
+										<td>
+											<div class="form-group radio_basic_swithes_padbott">
+												<input onchange="javascript:activarCuenta('<?= $cuenta['Cuenta']['id']?>',this)" class="make-switch-radio" type="checkbox" data-on-color="success" data-off-color="danger" <?= $cuenta['Cuenta']['estado'] ? "checked" : ""?>>
+											</div>
+										</td>
 										<td style="text-align: center">
 											<?= $this->Html->link('<i class="fa fa-edit fa-lg"></i>',"javascript:editCuenta(".$cuenta['Cuenta']['id'].")",array('escape'=>false,'data-toggle'=>'tooltip', 'data-placement'=>'top' ,'title'=>'Editar Cuenta'))?>
 
 										</td>
 									</tr>
-								<?php endforeach;?>
+								<?php $i++; endforeach;?>
 							</tbody>
 						</table>
 					</div>
@@ -212,6 +232,10 @@ echo $this->Html->script(
 		'/vendors/datatables/js/dataTables.scroller.min',
 		'/vendors/moment/js/moment.min',
 		'/vendors/datepicker/js/bootstrap-datepicker.min',
+
+		'/vendors/bootstrap-switch/js/bootstrap-switch.min',
+		'/vendors/switchery/js/switchery.min',
+		'pages/radio_checkbox'
 	),
 	array('inline'=>false));
 ?>
@@ -254,6 +278,28 @@ echo $this->Html->script(
 			}
 		});
 	}
+
+	function activarCuenta(id,input) {
+		var estado = input.checked ? 1 : 0
+		var dataString = 'id=' + id + '&estado=' + estado;
+		console.log(dataString);
+		$.ajax({
+			type: "POST",
+			url: '<?php echo Router::url(array("controller" => "cuentas", "action" => "activar"), TRUE); ?>',
+			data: dataString,
+			cache: false,
+			success: function (html) {
+				console.log(html);
+			}
+		});
+	}
+
+	function verTodas(){
+		for(i=0;i<=<?= $i?>;i++){
+			document.getElementById('tr_'+i).classList.remove('hide');
+		}
+	}
+
 
 	'use strict';
 	$(document).ready(function() {
