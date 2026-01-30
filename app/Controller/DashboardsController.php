@@ -71,6 +71,7 @@ class DashboardsController extends AppController {
 
 		// I5: % Gastos Operativos (Rojo) = I3 / I2
 		$I5 = ($I2 != 0) ? ($I3 / $I2) * 100 : 0;
+		$I5 = abs($I5);
 
 		// I6: % Utilidad Operativa (Amarillo) = I4 / I2
 		$I6 = ($I2 != 0) ? ($I4 / $I2) * 100 : 0;
