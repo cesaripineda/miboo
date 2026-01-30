@@ -75,12 +75,14 @@ class DashboardsController extends AppController {
 
 		// I6: % Utilidad Operativa (Amarillo) = I4 / I2
 		$I6 = ($I2 != 0) ? ($I4 / $I2) * 100 : 0;
+		$I6 = abs($I6);
 
 		// I7: Balance Pendiente (Negro) = I1 - I2
 		$I7 = $I1 - $I2;
 
 		// I8: % Realización Resultado (Aqua) = I2 / I1
 		$I8 = ($I1 != 0) ? ($I2 / $I1) * 100 : 0;
+		$I8 = abs($I8);
 
 		// --- 3. Pasar a la Vista ---
 		$this->set(compact('I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8'));
