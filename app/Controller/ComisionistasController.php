@@ -6,7 +6,20 @@ class ComisionistasController extends AppController {
 		$this->set('titulo_seccion','Lista de Agencias');
 		$this->Comisionista->Behaviors->load('Containable');
 
-		$comisionistas = $this->Comisionista->find('all');
+		$comisionistas = $this->Comisionista->find(
+			'all',
+			array(
+				'contain'=>array(
+					'Jugadors'=>array(
+						'conditions'=>array(
+							'estatus'=>1
+						)
+					),
+					'Movimientos',
+					'Comisiones'
+				)
+			)
+		);
 		$this->set('comisionistas',$comisionistas);
 
 

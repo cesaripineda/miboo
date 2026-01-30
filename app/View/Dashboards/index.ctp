@@ -6,94 +6,95 @@
 	array('inline'=>false));
 ?>
 <style>
-	.kpi-card { border-radius: 8px; padding: 20px; color: white; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-	.kpi-title { font-size: 12px; text-transform: uppercase; font-weight: bold; opacity: 0.8; letter-spacing: 0.5px; }
-	.kpi-value { font-size: 24px; font-weight: bold; display: block; margin-top: 5px; }
+	.kpi-container { padding: 20px; }
+	.kpi-card { border-radius: 10px; padding: 20px; color: white; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+	.kpi-title { font-size: 11px; text-transform: uppercase; font-weight: bold; opacity: 0.85; display: block; }
+	.kpi-value { font-size: 26px; font-weight: 800; display: block; margin-top: 5px; }
 
-	/* Clases de Colores Personalizadas */
-	.bg-teorico { background-color: #002366; } /* Azul Obscuro */
-	.bg-realizado { background-color: #6a0dad; } /* Morado */
-	.bg-gastos { background-color: #ff8c00; } /* Naranja */
-	.bg-operativo { background-color: #228b22; } /* Verde */
-	.bg-pct-gastos { background-color: #cc0000; } /* Rojo */
-	.bg-pct-utilidad { background-color: #ffd700; color: #333; } /* Amarillo */
-	.bg-pendiente { background-color: #333333; } /* Gris Obscuro */
-	.bg-realizacion { background-color: #00ffff; color: #333; } /* Aqua */
+	/* Colores según la tabla */
+	.bg-azul-marino { background-color: #000080; }
+	.bg-morado { background-color: #800080; }
+	.bg-naranja { background-color: #ff8c00; }
+	.bg-verde { background-color: #28a745; }
+	.bg-rojo { background-color: #dc3545; }
+	.bg-amarillo { background-color: #ffc107; color: #333 !important; }
+	.bg-negro { background-color: #000000; }
+	.bg-aqua { background-color: #00ffff; color: #333 !important; }
 
-	.filter-bar { background: #f4f4f4; padding: 15px; border-radius: 5px; margin-bottom: 25px; border: 1px solid #ddd; }
+	.filter-wrapper { background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 30px; }
 </style>
 
-<div class="container-fluid" style="padding: 20px;">
-	<h2>Panel de Indicadores - Nueva Definición</h2>
+<div class="kpi-container">
+	<h3 class="mb-4">📊 Dashboard Consolidado de Indicadores</h3>
 
-	<div class="filter-bar">
+	<div class="filter-wrapper">
 		<?php echo $this->Form->create('Dashboard', array('class' => 'form-inline')); ?>
-		<div class="form-group">
-			<label>Periodo: </label>
-			<input type="text" id="range_picker" class="form-control" style="width: 250px; margin: 0 10px;">
-			<?php echo $this->Form->button('Calcular', array('class' => 'btn btn-primary')); ?>
+		<div class="form-group mr-3">
+			<label class="mr-2">Rango de fechas: </label>
+			<input type="text" id="drp" class="form-control" style="width: 250px;">
 		</div>
 		<?php
-		echo $this->Form->input('fecha_inicio', array('type' => 'hidden', 'id' => 'start_field'));
-		echo $this->Form->input('fecha_fin', array('type' => 'hidden', 'id' => 'end_field'));
+		echo $this->Form->input('fecha_inicio', array('type' => 'hidden', 'id' => 'fi'));
+		echo $this->Form->input('fecha_fin', array('type' => 'hidden', 'id' => 'ff'));
+		echo $this->Form->button('Actualizar Datos', array('class' => 'btn btn-info'));
 		?>
 		<?php echo $this->Form->end(); ?>
 	</div>
 
 	<div class="row">
 		<div class="col-md-3">
-			<div class="kpi-card bg-teorico">
+			<div class="kpi-card bg-azul-marino">
 				<span class="kpi-title">Resultado Juego Teórico</span>
-				<span class="kpi-value"><?php echo $this->Number->currency($I1_Teorico); ?></span>
+				<span class="kpi-value"><?php echo $this->Number->currency($I1); ?></span>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-realizado">
+			<div class="kpi-card bg-morado">
 				<span class="kpi-title">Resultado Juego Realizado</span>
-				<span class="kpi-value"><?php echo $this->Number->currency($I2_Realizado); ?></span>
+				<span class="kpi-value"><?php echo $this->Number->currency($I2); ?></span>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-gastos">
+			<div class="kpi-card bg-naranja">
 				<span class="kpi-title">Gastos Operativos</span>
-				<span class="kpi-value"><?php echo $this->Number->currency($I3_GastosOp); ?></span>
+				<span class="kpi-value"><?php echo $this->Number->currency($I3); ?></span>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-operativo">
+			<div class="kpi-card bg-verde">
 				<span class="kpi-title">Resultado Operativo</span>
-				<span class="kpi-value"><?php echo $this->Number->currency($I4_ResOperativo); ?></span>
+				<span class="kpi-value"><?php echo $this->Number->currency($I4); ?></span>
 			</div>
 		</div>
+	</div>
 
+	<div class="row">
 		<div class="col-md-3">
-			<div class="kpi-card bg-pct-gastos">
+			<div class="kpi-card bg-rojo">
 				<span class="kpi-title">% Gastos Operativos</span>
-				<span class="kpi-value"><?php echo number_format($I5_PctGastos, 2); ?>%</span>
+				<span class="kpi-value"><?php echo number_format($I5, 2); ?>%</span>
+				<small>(I3 / I2)</small>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-pct-utilidad">
+			<div class="kpi-card bg-amarillo">
 				<span class="kpi-title">% Utilidad Operativa</span>
-				<span class="kpi-value"><?php echo number_format($I6_PctUtilidad, 2); ?>%</span>
+				<span class="kpi-value"><?php echo number_format($I6, 2); ?>%</span>
+				<small>(I4 / I2)</small>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-pendiente">
+			<div class="kpi-card bg-negro">
 				<span class="kpi-title">Balance Pendiente</span>
-				<span class="kpi-value"><?php echo $this->Number->currency($I7_BalancePend); ?></span>
+				<span class="kpi-value"><?php echo $this->Number->currency($I7); ?></span>
+				<small>(I1 - I2)</small>
 			</div>
 		</div>
-
 		<div class="col-md-3">
-			<div class="kpi-card bg-realizacion">
+			<div class="kpi-card bg-aqua">
 				<span class="kpi-title">% Realización Resultado</span>
-				<span class="kpi-value"><?php echo number_format($I8_PctRealizacion, 2); ?>%</span>
+				<span class="kpi-value"><?php echo number_format($I8, 2); ?>%</span>
+				<small>(I2 / I1)</small>
 			</div>
 		</div>
 	</div>
@@ -104,17 +105,17 @@
 		var start = moment('<?php echo $this->request->data['Dashboard']['fecha_inicio']; ?>');
 		var end = moment('<?php echo $this->request->data['Dashboard']['fecha_fin']; ?>');
 
-		$('#range_picker').daterangepicker({
+		$('#drp').daterangepicker({
 			startDate: start,
 			endDate: end,
-			locale: { format: 'DD/MM/YYYY' }
+			locale: { format: 'DD/MM/YYYY', applyLabel: 'Cargar', cancelLabel: 'Limpiar' }
 		}, function(start, end) {
-			$('#start_field').val(start.format('YYYY-MM-DD'));
-			$('#end_field').val(end.format('YYYY-MM-DD'));
+			$('#fi').val(start.format('YYYY-MM-DD'));
+			$('#ff').val(end.format('YYYY-MM-DD'));
 		});
 
-		$('#start_field').val(start.format('YYYY-MM-DD'));
-		$('#end_field').val(end.format('YYYY-MM-DD'));
+		$('#fi').val(start.format('YYYY-MM-DD'));
+		$('#ff').val(end.format('YYYY-MM-DD'));
 	});
 </script>
 
