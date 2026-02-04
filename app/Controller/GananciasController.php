@@ -34,6 +34,7 @@ class GananciasController extends AppController {
 					'ganancia_neta' => $this->request->data['Ganancia']['monto_dd_'.$i],
 					'comisionista_id' => $this->request->data['Ganancia']['comisionista_id_'.$i],
 					'comision' => $this->request->data['Ganancia']['comision_'.$i],
+					'fecha' => date('Y-m-d')
 				);
 				$this->Ganancia->create();
 				$this->Ganancia->save($ganancia);

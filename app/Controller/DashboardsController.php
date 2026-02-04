@@ -16,16 +16,9 @@ class DashboardsController extends AppController {
 			$fecha_fin = date('Y-m-d');
 		}
 
-		$semana_ini = date('W', strtotime($fecha_inicio));
-		$anio_ini = date('Y', strtotime($fecha_inicio));
-		$semana_fin = date('W', strtotime($fecha_fin));
-		$anio_fin = date('Y', strtotime($fecha_fin));
-
 		$condGanancia = array(
-			'AND' => array(
-				array('Ganancia.anio >=' => $anio_ini, 'Ganancia.anio <=' => $anio_fin),
-				array('Ganancia.semana >=' => $semana_ini, 'Ganancia.semana <=' => $semana_fin)
-			)
+			'Ganancia.fecha >=' => $fecha_inicio,
+			'Ganancia.fecha <=' => $fecha_fin
 		);
 
 		$condMov = array(
