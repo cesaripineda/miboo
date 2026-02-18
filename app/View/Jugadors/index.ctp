@@ -319,6 +319,7 @@
 				document.getElementById('JugadorDescuento2').value = html.Jugador.descuento_2;
 				document.getElementById('JugadorFormaPago').value = html.Jugador.forma_pago;
 				document.getElementById('JugadorCorridas').value = html.Jugador.corridas;
+				document.getElementById('JugadorSaldoInicial').value = html.Jugador.saldo_inicial;
 				document.getElementById('JugadorComisionistaId').value = html.Jugador.comisionista_id;
 				document.getElementById('JugadorComisionComisionista').value = html.Jugador.comision_comisionista;
 			}
